@@ -9,7 +9,7 @@ import getStripe from '../lib/getStripe';
 
 const Cart = () => {
   const cartRef = useRef();
-  const { totalPrice, totalQuantities, cartItems, setShowCart, toggleCartItemQuantity, onRemove } = useStateContext();
+  const { totalPrice, totalQuantities, cartItems, setShowCart, toggleCartItemQuantity, onRemove, setCartItems, setTotalPrice, setTotalQuantities } = useStateContext();
 
   const handleCheckout = async () => {
     const stripe = await getStripe();
@@ -29,6 +29,10 @@ const Cart = () => {
     toast.loading('Redirecting...');
 
     stripe.redirectToCheckout({ sessionId: data.id });
+    localStorage.clear();
+    setCartItems([]);
+    setTotalPrice(0);
+    setTotalQuantities(0);
   }
 
   return (

@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/router';
+
+const cart = process.browser && localStorage.getItem('cartItems')? JSON.parse(localStorage.getItem('cartItems')) : [];
+const price = process.browser && localStorage.getItem('totalPrice') ? JSON.parse(localStorage.getItem('totalPrice')) : 0;
+const quantities = process.browser && localStorage.getItem('totalQuantities') ? JSON.parse(localStorage.getItem('totalQuantities')) : 0;
 
 const Context = createContext();
 
@@ -9,9 +14,34 @@ export const StateContext = ({ children }) => {
     const [totalPrice, setTotalPrice] = useState(0);
     const [totalQuantities, setTotalQuantities] = useState(0);
     const [qty, setQty] = useState(1);
+    const router = useRouter();
 
     let foundProduct;
     let index;
+
+    useEffect(() => {
+      
+      setCartItems(cart);
+      
+      setTotalPrice(price);
+      
+      setTotalQuantities(quantities);
+    }, [])
+    
+
+    useEffect(() => {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }, [cartItems]);
+
+    useEffect(() => {
+        localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
+    } , [totalPrice]);
+
+    useEffect(() => {
+        localStorage.setItem('totalQuantities', JSON.stringify(totalQuantities));
+    } , [totalQuantities]);
+
+    
 
     const onAdd = (product, quantity) => {
         const checkProductInCart = cartItems.find(item => item._id === product._id);
@@ -73,6 +103,13 @@ export const StateContext = ({ children }) => {
                 setTotalQuantities(prevTotalQuantities => prevTotalQuantities - 1)
             }
         }
+    }
+
+    const handleSuccessPage = () => {
+        localStorage.clear();
+        setCartItems([]);
+        setTotalPrice(0);
+        setTotalQuantities(0);
     }
 
     const incQty = () => {
