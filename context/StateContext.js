@@ -105,12 +105,6 @@ export const StateContext = ({ children }) => {
         }
     }
 
-    const handleSuccessPage = () => {
-        localStorage.clear();
-        setCartItems([]);
-        setTotalPrice(0);
-        setTotalQuantities(0);
-    }
 
     const incQty = () => {
         setQty((prev) => prev + 1);
